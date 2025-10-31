@@ -1,6 +1,11 @@
 services:
-  "zigx_nuhu_dev":
-    image: zigx_nuhu_dev:v3
+  zigx_nuhu_dev:
+    image: zigx_nuhu_dev:latest
     container_name: "zigx.nuhu.dev"
+    restart: unless-stopped
     networks:
       - npm
+
+networks:
+  npm:
+    driver: bridge

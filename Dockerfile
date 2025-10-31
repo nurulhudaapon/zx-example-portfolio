@@ -18,6 +18,7 @@ RUN /opt/zig/zig build -Doptimize=ReleaseFast -Dcpu=baseline
 # Run the app
 FROM debian:12.12
 ARG FW=zap
+RUN apt-get update && apt-get install -y curl xz-utils
 COPY --from=build /app/zig-out/bin/www_zigx_nuhu_dev /bin/nuhu_site
 
 ENTRYPOINT ["/bin/nuhu_site"]

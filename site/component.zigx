@@ -1,0 +1,16 @@
+pub const NavbarProps = struct {
+};
+
+pub fn Navbar(allocator: zx.Allocator, props: NavbarProps) zx.Component {
+    _ = props;
+    return (
+        <nav class="nav-buttons">
+            <a class="nav-button" href="/">Home</a>
+            <a class="nav-button" href="/blog">Blog</a>
+            <a class="nav-button" href="/about">About</a>
+            <a class="nav-button nav-button-external" href="https://nuhu.dev" target="_blank" rel="noopener noreferrer">Dev</a>
+        </nav>
+    );
+}
+
+const zx = @import("zx");

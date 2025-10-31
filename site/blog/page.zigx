@@ -1,24 +1,24 @@
 pub fn Page(allocator: zx.Allocator) zx.Component {
     const __zx = zx.init(allocator);
-    // const now_ms: i64 = std.time.milliTimestamp();
-    // const one_hour_ms: i64 = 3_600_000;
+    const now_ms: i64 = std.time.milliTimestamp();
+    const one_hour_ms: i64 = 3_600_000;
 
-    // if (cached_posts) |p| {
-    //     if (now_ms - cached_at_ms < one_hour_ms) {
-    //         const posts = p;
-    //         return render(posts, allocator);
-    //     }
-    // }
+    if (cached_posts) |p| {
+        if (now_ms - cached_at_ms < one_hour_ms) {
+            const posts = p;
+            return render(posts, allocator);
+        }
+    }
 
-    const fetched = zigx_nuhu_dev.getPosts(allocator) catch {
+   const fetched = zigx_nuhu_dev.getPosts(std.heap.c_allocator) catch {
         return __zx.zx(.p, .{
             .children = &.{
                 __zx.txt("Error fetching posts. Please try again later."),
             },
         });
     };
-    // cached_posts = fetched;
-    // cached_at_ms = now_ms;
+    cached_posts = fetched;
+    cached_at_ms = now_ms;
 
     return render(fetched, allocator);
 }
@@ -77,5 +77,5 @@ const zx = @import("zx");
 const zigx_nuhu_dev = @import("zigx_nuhu_dev");
 const std = @import("std");
 
-// var cached_posts: ?zigx_nuhu_dev.HashnodeResponse = null;
-// var cached_at_ms: i64 = 0;
+var cached_posts: ?zigx_nuhu_dev.HashnodeResponse = null;
+var cached_at_ms: i64 = 0;
