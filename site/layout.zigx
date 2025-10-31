@@ -15,7 +15,7 @@ pub fn Layout(allocator: zx.Allocator, children: zx.Component) zx.Component {
         <meta name="twitter:card" content="summary">
         <meta name="twitter:title" content="Nurul Huda (Apon)">
         <meta name="twitter:description" content="Staff Engineer at Voyage Mobile Inc. Tech enthusiast, Computer Science student at Green University of Bangladesh.">
-
+        <link rel="icon" href="https://nurulhudaapon.com/favicon.ico" sizes="32x32" type="image/x-icon">
       <style>
         {CSS_STYLES}
       </style>
