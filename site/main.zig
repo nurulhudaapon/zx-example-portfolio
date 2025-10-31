@@ -8,7 +8,10 @@ pub fn main() !void {
     const allocator = gpa.allocator();
 
     var handler = Handler{};
-    var server = try httpz.Server(*Handler).init(allocator, .{ .port = 5882 }, &handler);
+    var server = try httpz.Server(*Handler).init(allocator, .{
+        .port = 5882,
+        .address = "0.0.0.0",
+    }, &handler);
     defer {
         server.stop();
         server.deinit();

@@ -1,0 +1,6 @@
+services:
+  "zigx_nuhu_dev":
+    image: zigx_nuhu_dev:v3
+    container_name: "zigx.nuhu.dev"
+    networks:
+      - npm

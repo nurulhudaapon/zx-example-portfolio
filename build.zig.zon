@@ -33,8 +33,8 @@
     // internet connectivity.
     .dependencies = .{
         .zigx_prototype = .{
-            .url = "git+https://github.com/nurulhudaapon/zigx-prototype?ref=master#b792bb91eb7e3fb0542907579b9f63bc17799edb",
-            .hash = "zigx_prototype-0.0.0-MCGw0oBqAQDm1lV6NznkDrWidmYtRCYpl8MSR4sJ8FGQ",
+            .url = "git+https://github.com/nurulhudaapon/zigx-prototype#39a1be4c25d1832cd325e2f37d6a35ec18757ef8",
+            .hash = "zigx_prototype-0.0.0-MCGw0nqVAQAXKyjdECrJ890LF0xTsHnwcGWLdYoDt05a",
         },
         .httpz = .{
             .url = "git+https://github.com/karlseguin/http.zig?ref=master#9c918865554c82648cd5eeff52b373d291625edc",
