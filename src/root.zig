@@ -3,19 +3,43 @@ const zigx_nuhu_dev = @import("zigx_nuhu_dev");
 
 const HASHNODE_GQL_URL = "https://gql.hashnode.com";
 const HASHNODE_API_KEY = "YOUR_HASHNODE_API_KEY";
-const CACHE_DIR = ".cache";
+const CACHE_TTL_MS: i64 = 3_600_000; // 1 hour
 
-pub fn getPosts(allocator: std.mem.Allocator) ![]Post {
-    const now_ms: i64 = std.time.milliTimestamp();
-    const one_hour_ms: i64 = 3_600_000;
-    const cache_key = "hashnode_posts";
+// Simple in-memory cache with persistent allocator
+const Cache = struct {
+    allocator: std.mem.Allocator,
+    data: ?[]const u8 = null,
+    cached_at: i64 = 0,
 
-    // Try to read from cache
-    if (readCache(allocator, cache_key, now_ms, one_hour_ms)) |cached_data| {
-        // defer allocator.free(cached_data);
-        return try parsePostsFromJson(allocator, cached_data);
-    } else |_| {
-        // Cache doesn't exist or is expired, continue to fetch fresh data
+    fn isValid(self: *const Cache) bool {
+        if (self.data == null) return false;
+        const now = std.time.milliTimestamp();
+        return (now - self.cached_at) < CACHE_TTL_MS;
+    }
+
+    fn update(self: *Cache, data: []const u8) !void {
+        // Free old cached data if exists
+        if (self.data) |old_data| {
+            self.allocator.free(old_data);
+        }
+        // Duplicate the data so it persists
+        self.data = try self.allocator.dupe(u8, data);
+        self.cached_at = std.time.milliTimestamp();
+    }
+};
+
+var cache_gpa = std.heap.GeneralPurposeAllocator(.{}){};
+var posts_cache: Cache = .{ .allocator = cache_gpa.allocator() };
+
+const GetPostError = error{ FailedToFetchPosts, FailedToParsePosts, OutOfMemory };
+
+pub fn getPosts(allocator: std.mem.Allocator) GetPostError![]Post {
+    // Return cached data if valid
+    if (posts_cache.isValid()) {
+        return parsePostsFromJson(allocator, posts_cache.data.?) catch |err| {
+            std.log.err("Failed to parse cached posts: {any}", .{err});
+            return error.FailedToParsePosts;
+        };
     }
 
     // Fetch fresh posts from Hashnode API
@@ -25,7 +49,7 @@ pub fn getPosts(allocator: std.mem.Allocator) ![]Post {
 
     var aw = std.Io.Writer.Allocating.init(allocator);
 
-    _ = try client.fetch(.{
+    _ = client.fetch(.{
         .method = .POST,
         .location = .{ .url = HASHNODE_GQL_URL },
         .headers = std.http.Client.Request.Headers{
@@ -37,16 +61,26 @@ pub fn getPosts(allocator: std.mem.Allocator) ![]Post {
         }, .{}),
 
         .response_writer = &aw.writer,
-    });
+    }) catch |err| {
+        std.log.err("Failed to fetch posts: {any}", .{err});
+        return error.FailedToFetchPosts;
+    };
 
     const response_text = aw.written();
 
-    // Cache the raw response
-    writeCache(allocator, cache_key, response_text, now_ms) catch |err| {
-        std.debug.print("Failed to write cache: {}\n", .{err});
+    // Parse first to ensure it's valid before caching
+    const posts = parsePostsFromJson(allocator, response_text) catch |err| {
+        std.log.err("Failed to parse fetched posts: {any}", .{err});
+        return error.FailedToParsePosts;
     };
 
-    return try parsePostsFromJson(allocator, response_text);
+    // Cache the response for future requests
+    posts_cache.update(response_text) catch |err| {
+        std.log.warn("Failed to cache posts: {any}", .{err});
+        // Continue anyway, we have the parsed posts
+    };
+
+    return posts;
 }
 
 fn parsePostsFromJson(allocator: std.mem.Allocator, json_text: []const u8) ![]Post {
@@ -67,80 +101,6 @@ fn parsePostsFromJson(allocator: std.mem.Allocator, json_text: []const u8) ![]Po
     }
 
     return posts;
-}
-
-/// Generic cache read function
-/// Reads cached data if it exists and is still valid based on TTL
-/// Returns the raw cached data
-fn readCache(allocator: std.mem.Allocator, key: []const u8, now_ms: i64, ttl_ms: i64) ![]const u8 {
-    // Ensure cache directory exists
-    var cache_dir = std.fs.cwd().openDir(CACHE_DIR, .{ .iterate = true }) catch |err| {
-        if (err == error.FileNotFound) return error.CacheNotFound;
-        return err;
-    };
-    defer cache_dir.close();
-
-    // Iterate through cache directory to find matching key
-    var iter = cache_dir.iterate();
-    while (try iter.next()) |entry| {
-        if (entry.kind != .file) continue;
-
-        // Check if filename starts with our key
-        if (!std.mem.startsWith(u8, entry.name, key)) continue;
-
-        // Extract timestamp from filename: key_timestamp.ext
-        const underscore_idx = std.mem.lastIndexOf(u8, entry.name, "_") orelse continue;
-        const dot_idx = std.mem.lastIndexOf(u8, entry.name, ".") orelse continue;
-
-        if (underscore_idx >= dot_idx) continue;
-
-        const timestamp_str = entry.name[underscore_idx + 1 .. dot_idx];
-        const cached_at_ms = std.fmt.parseInt(i64, timestamp_str, 10) catch continue;
-
-        // Check if cache is still valid
-        if (now_ms - cached_at_ms < ttl_ms) {
-            // Read and return the raw file content
-            const file = try cache_dir.openFile(entry.name, .{});
-            defer file.close();
-
-            return try file.readToEndAlloc(allocator, 10 * 1024 * 1024); // 10MB max
-        } else {
-            // Cache is expired, delete it
-            cache_dir.deleteFile(entry.name) catch {};
-        }
-    }
-
-    return error.CacheNotFound;
-}
-
-/// Generic cache write function
-/// Stores raw data in a file named with the key and timestamp
-fn writeCache(allocator: std.mem.Allocator, key: []const u8, value: []const u8, timestamp_ms: i64) !void {
-    // Ensure cache directory exists
-    std.fs.cwd().makeDir(CACHE_DIR) catch |err| {
-        if (err != error.PathAlreadyExists) return err;
-    };
-
-    // Clean up old cache files for this key
-    var cache_dir = try std.fs.cwd().openDir(CACHE_DIR, .{ .iterate = true });
-    defer cache_dir.close();
-
-    var iter = cache_dir.iterate();
-    while (try iter.next()) |entry| {
-        if (entry.kind != .file) continue;
-        if (std.mem.startsWith(u8, entry.name, key)) {
-            cache_dir.deleteFile(entry.name) catch {};
-        }
-    }
-
-    // Create new cache file with timestamp in filename
-    const cache_filename = try std.fmt.allocPrint(allocator, "{s}/{s}_{d}.txt", .{ CACHE_DIR, key, timestamp_ms });
-    defer allocator.free(cache_filename);
-
-    const file = try std.fs.cwd().createFile(cache_filename, .{});
-    defer file.close();
-
-    try file.writeAll(value);
 }
 
 pub const Post = struct {

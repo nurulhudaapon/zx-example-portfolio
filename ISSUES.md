@@ -1,3 +1,4 @@
 - [ ] @import("component.zigx") is not being transpiled to @import("component.zig")
 - [ ] Must need to add props to components, should only transpile to pass props if the original component has props
-- [ ] Asset hanling feature
+- [ ] Asset handling feature
+- [ ] Ability to declare variables within for/if block within expression

@@ -10,13 +10,9 @@ pub fn main() !void {
     const allocator = gpa.allocator();
     defer _ = gpa.deinit();
 
-    var app = try zx.App.init(allocator, .{ .server = .{ .port = PORT, .address = "0.0.0.0" }, .meta = &Metadata.meta });
-
-    defer {
-        app.server.stop();
-        app.server.deinit();
-    }
+    const app = try zx.App.init(allocator, .{ .server = .{ .port = PORT, .address = "0.0.0.0" }, .meta = &Metadata.meta });
+    defer app.deinit();
 
     std.debug.print("ZigX {s}\n  - Local: http://localhost:{d}\n", .{ VERSION, PORT });
-    try app.server.listen();
+    try app.start();
 }

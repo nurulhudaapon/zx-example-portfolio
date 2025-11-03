@@ -1,5 +1,7 @@
 pub fn Page(allocator: zx.Allocator) zx.Component {
-    const posts = zigx_nuhu_dev.getPosts(std.heap.c_allocator) catch {
+    const posts = zigx_nuhu_dev.getPosts(allocator) catch |err| {
+        std.debug.print("Error fetching posts: {any}\n", .{err});
+
         return (<p>Error fetching posts. Please try again later.</p>);
     };
 
