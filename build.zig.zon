@@ -4,9 +4,9 @@
     .fingerprint = 0xd8465aa71e61ec71,
     .minimum_zig_version = "0.15.2",
     .dependencies = .{
-        .zigx = .{
-            .url = "git+https://github.com/nurulhudaapon/zigx#9b13fcc9ea3c346743847c6dbeed1fa18d71dc99",
-            .hash = "zigx-0.0.1-dev.10-w-j9otwYAgAo-7OPLspitLqf9S7UFwBE6YQ-BTsK44ge",
+        .zx = .{
+            .url = "git+https://github.com/nurulhudaapon/zx#7257ea5f876a1761440ac6ccd33e6f0caaa3f80d",
+            .hash = "zx-0.0.1-dev.13-8okzKiMTAgBhPfxf4E3msYr37JVrY6nSlRSw9Tu1yzSp",
         },
     },
     .paths = .{
