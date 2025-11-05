@@ -17,7 +17,7 @@ pub fn Layout(allocator: zx.Allocator, children: zx.Component) zx.Component {
         <meta name="twitter:description" content="Staff Engineer at Voyage Mobile Inc. Tech enthusiast, Computer Science student at Green University of Bangladesh.">
         <link rel="icon" href="https://nurulhudaapon.com/favicon.ico" sizes="32x32" type="image/x-icon">
       <style>
-        {CSS_STYLES}
+        {[CSS_STYLES:s]}
       </style>
       </head>
 
