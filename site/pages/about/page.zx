@@ -1,10 +1,13 @@
-pub fn Page(allocator: zx.Allocator) zx.Component {
+pub fn Page(ctx: zx.PageContext) zx.Component {
     return (
-        <main>
-            <p>I currently live in Dhaka, Bangladesh and work remotely as a Staff Engineer at Voyage Mobile Inc, while being a 4th year undergraduate student at Green University of Bangladesh.</p>
-            <p>I started programming in 2019, near the end of high school. Around the same time, I started my professional career as a QA Engineer. I've grown with the same company and now working as a Staff Engineer.</p>
+        <main @allocator={ctx.allocator}>
+            <p>I currently live in Dhaka, Bangladesh and work remotely as a Staff Engineer at Voyage Mobile Inc, while being a
+                4th year undergraduate student at Green University of Bangladesh.</p>
+            <p>I started programming in 2019, near the end of high school. Around the same time, I started my professional
+                career as a QA Engineer. I've grown with the same company and now working as a Staff Engineer.</p>
             <p>Working full-time while studying is tough, but it has taught me good time management and how to keep going.</p>
-            <p>In my free time, I enjoy learning about new technologies. I'm a friendly person who likes meeting new people, but I can also be a bit quiet.</p>
+            <p>In my free time, I enjoy learning about new technologies. I'm a friendly person who likes meeting new people, but
+                I can also be a bit quiet.</p>
         </main>
     );
 }

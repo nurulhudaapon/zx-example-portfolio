@@ -1,10 +1,12 @@
-pub fn Page(allocator: zx.Allocator) zx.Component {
+pub fn Page(ctx: zx.PageContext) zx.Component {
     return (
-        <main class="home-page">
-            <img class="profile-image" alt="Nurul Huda (Apon)" width="280" fetchpriority="high" src="https://nurulhudaapon.com/nurulhudaapon.webp" />
+        <main @allocator={ctx.arena} class="home-page">
+            <img class="profile-image" alt="Nurul Huda (Apon)" width="280" fetchpriority="high"
+                src="https://nurulhudaapon.com/nurulhudaapon.webp" />
             <h1 class="name-title">Nurul Huda (Apon)</h1>
             <p class="job-title">Staff Engineer at <strong>Voyage Mobile Inc.</strong></p>
-            <p class="bio">A tech enthusiast, enrolling in Computer Science and Engineering at <strong>Green University of Bangladesh</strong> and working as a <strong>Staff Engineer</strong></p>
+            <p class="bio">A tech enthusiast, enrolling in Computer Science and Engineering at <strong>Green University of
+                    Bangladesh</strong> and working as a <strong>Staff Engineer</strong></p>
             <Navbar />
         </main>
     );
