@@ -1,25 +1,24 @@
 pub fn Page(ctx: zx.PageContext) zx.Component {
-    const allocator = ctx.allocator;
 
-    const posts = zx_site_mod.getPosts(ctx.allocator) catch |err| {
-        return (<p>Error fetching posts. Please try again later. {[err:any]}</p>);
+    const posts = zx_site_mod.getPosts(ctx.arena) catch |err| {
+        return (<p @allocator={ctx.arena}>Error fetching posts. Please try again later. {[err:any]}</p>);
     };
 
     return (
-        <main @allocator={ctx.allocator}>
-            <h1>Blog</h1>
-            <ol>
-                {for (posts) |post| {
-                    (        <li>
+        <main @allocator={ctx.arena}>
+        	<h1>Blog</h1>
+        	<ol>
+        		{for (posts) |post| (
+                    <li>
                         <div>
                             <a href={post.url}>
                                 <h3>{post.title}</h3>
                             </a>
                             <p>{post.brief}</p>
                         </div>
-                    </li>)
-                }}
-            </ol>
+                    </li>
+              )}
+        	</ol>
         </main>
     );
 }

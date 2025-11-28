@@ -1,4 +1,12 @@
+# Zig
 .zig-cache
 zig-out
-.zx
+
+# ZX
+/dist
+/bundle
+
+# Node.js
+node_modules
+
 bench

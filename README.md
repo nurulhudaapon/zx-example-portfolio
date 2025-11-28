@@ -3,8 +3,28 @@ This is a simple example portfolio built with [ZX](https://github.com/nurulhudaa
 
 ZX lets you build web applications using Zig with syntax similar to JSX.
 
-## Running this project
+**[Full Documentation →](https://ziex.dev)**
 
+## Installation of ZX 
+
+##### Linux/macOS
 ```bash
-zig build serve
+curl -fsSL https://ziex.dev/install | bash
+```
+
+##### Windows
+```powershell
+powershell -c "irm ziex.dev/install.ps1 | iex"
+
+```
+##### Installing Zig
+```bash
+brew install zig # macOS
+winget install -e --id zig.zig # Windows
+```
+[_See for other platforms →_](https://ziglang.org/learn/getting-started/)
+
+### Running this Project
+```bash
+zx serve
 ```

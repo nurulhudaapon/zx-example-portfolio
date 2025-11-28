@@ -1,4 +1,0 @@
-#!/bin/bash
-
-rm -rf .zig-cache zig-out
-zig fetch --save "git+https://github.com/nurulhudaapon/zx"
