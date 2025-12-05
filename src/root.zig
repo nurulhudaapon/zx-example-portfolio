@@ -44,8 +44,9 @@ pub fn getPosts(allocator: std.mem.Allocator) GetPostError![]Post {
 
     // Fetch fresh posts from Hashnode API
     var client = std.http.Client{ .allocator = allocator };
-    const get_posts_query = @embedFile("queries/get_posts.gql");
     defer client.deinit();
+
+    const get_posts_query = @embedFile("queries/get_posts.gql");
 
     var aw = std.Io.Writer.Allocating.init(allocator);
 

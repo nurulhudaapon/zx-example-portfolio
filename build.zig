@@ -1,7 +1,7 @@
 const std = @import("std");
 const zx = @import("zx");
 
-pub fn build(b: *std.Build) void {
+pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
     const optimize = b.standardOptimizeOption(.{});
 
@@ -10,7 +10,7 @@ pub fn build(b: *std.Build) void {
         .target = target,
     });
 
-    zx.setup(b, .{
+    const exe = b.addExecutable(.{
         .name = "zx_site",
         .root_module = b.createModule(.{
             .root_source_file = b.path("site/main.zig"),
@@ -21,4 +21,5 @@ pub fn build(b: *std.Build) void {
             },
         }),
     });
+    try zx.init(b, exe, .{});
 }
