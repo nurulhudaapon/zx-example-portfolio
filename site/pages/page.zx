@@ -1,17 +1,15 @@
 pub fn Page(ctx: zx.PageContext) zx.Component {
     return (
         <main @allocator={ctx.arena} class="home-page">
-            <img class="profile-image" alt="Nurul Huda (Apon)" width="280" fetchpriority="high"
-                src="https://nurulhudaapon.com/nurulhudaapon.webp" />
+            <img class="profile-image" alt="Nurul Huda (Apon)" width="280" fetchpriority="high" src="https://nurulhudaapon.com/nurulhudaapon.webp" />
             <h1 class="name-title">Nurul Huda (Apon)</h1>
             <p class="job-title">Staff Engineer at <strong>Voyage Mobile Inc.</strong></p>
-            <p class="bio">A tech enthusiast, enrolling in Computer Science and Engineering at <strong>Green University of
-                    Bangladesh</strong> and working as a <strong>Staff Engineer</strong></p>
+            <p class="bio">A tech enthusiast, enrolling in Computer Science and Engineering at <strong>Green University of Bangladesh</strong> and working as a <strong>Staff Engineer</strong></p>
             <Navbar />
         </main>
     );
 }
 
 const zx = @import("zx");
-const Navbar = @import("component.zig").Navbar;
-const NavbarProps = @import("component.zig").NavbarProps;
+const Navbar = @import("component.zx").Navbar;
+const NavbarProps = @import("component.zx").NavbarProps;
