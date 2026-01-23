@@ -5,7 +5,7 @@ pub fn Page(ctx: zx.PageContext) zx.Component {
         <div @allocator={ctx.arena}>
             <h1>Timed:</h1>
             <p>
-                {[time:d]}
+                {time}
             </p>
         </div>
     );
@@ -13,3 +13,4 @@ pub fn Page(ctx: zx.PageContext) zx.Component {
 
 const zx = @import("zx");
 const std = @import("std");
+const NavBar = @import("../component.zx").NavBar;

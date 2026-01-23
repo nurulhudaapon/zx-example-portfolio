@@ -1,9 +1,8 @@
 pub const NavbarProps = struct {};
 
-pub fn Navbar(allocator: zx.Allocator, props: NavbarProps) zx.Component {
-    _ = props;
+pub fn Navbar(ctx: *zx.ComponentCtx(NavbarProps)) zx.Component {
     return (
-        <nav class="nav-buttons" @allocator={allocator}>
+        <nav class="nav-buttons" @allocator={ctx.allocator}>
             <a class="nav-button" href="/">Home</a>
             <a class="nav-button" href="/blog">Blog</a>
             <a class="nav-button" href="/about">About</a>
