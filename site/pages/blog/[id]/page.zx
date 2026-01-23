@@ -4,6 +4,7 @@ pub fn Page(ctx: zx.PageContext) !zx.Component {
 
     return (
         <main @allocator={ctx.arena} class="post-page">
+            <a href="/blog" class="back-to-blog">← Back to Blog</a>
             <article>
                 {if (post.coverImage) |coverImage| (
                     <img src={coverImage} alt={post.title} class="post-cover" />
@@ -33,6 +34,10 @@ pub fn Page(ctx: zx.PageContext) !zx.Component {
         </main>
     );
 }
+
+pub const options: zx.PageOptions = .{
+    .caching =  .tag("7d")
+};
 
 const zx = @import("zx");
 const zx_site_mod = @import("zx_site_mod");

@@ -196,6 +196,97 @@ div {
     margin-bottom: var(--spacing-md);
 }
 
+/* Post page styles */
+.post-page {
+    max-width: 800px;
+}
+
+.back-to-blog {
+    display: inline-block;
+    margin-bottom: var(--spacing-xl);
+    color: var(--color-text-secondary);
+    text-decoration: none;
+    font-size: 0.95rem;
+    transition: color 0.2s ease;
+}
+
+.back-to-blog:hover {
+    color: var(--color-text);
+    text-decoration: none;
+}
+
+.post-cover {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: var(--spacing-xl);
+    object-fit: cover;
+}
+
+.post-header {
+    margin-bottom: var(--spacing-xl);
+}
+
+.post-title {
+    margin-bottom: var(--spacing-md);
+}
+
+.post-subtitle {
+    font-size: 1.25rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-md);
+}
+
+.post-meta {
+    display: flex;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--color-text-secondary);
+    margin-bottom: var(--spacing-lg);
+}
+
+.post-meta span {
+    display: inline-block;
+}
+
+.post-content {
+    line-height: 1.8;
+}
+
+/* Hashnode image styles */
+.post-content img,
+.image--center,
+.mx-auto {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--spacing-xl) auto;
+    border-radius: 8px;
+}
+
+/* Center images with both classes */
+.image--center.mx-auto,
+.mx-auto.image--center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* General image styling in post content */
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: var(--spacing-xl) auto;
+}
+
+/* Responsive images */
+.post-content img[class*="image"] {
+    max-width: 100%;
+    width: auto;
+    height: auto;
+}
 
 /* Footer */
 .site-footer {
@@ -284,5 +375,17 @@ div {
 
     .social-links {
         flex-wrap: wrap;
+    }
+
+    /* Post content images on mobile */
+    .post-content img,
+    .image--center,
+    .mx-auto {
+        margin: var(--spacing-lg) auto;
+    }
+
+    .post-meta {
+        gap: var(--spacing-sm);
+        font-size: 0.85rem;
     }
 }
