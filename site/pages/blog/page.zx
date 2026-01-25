@@ -8,7 +8,7 @@ pub fn Page(ctx: zx.PageContext) !zx.Component {
                 {for (posts) |post| (
                     <li>
                         <div>
-                            <a href=`/blog/{post.slug}` >
+                            <a href=`/blog/{post.slug}`>
                                 <h3>{post.title}</h3>
                             </a>
                             <p>{post.brief}</p>
@@ -20,11 +20,7 @@ pub fn Page(ctx: zx.PageContext) !zx.Component {
     );
 }
 
-
-pub const options: zx.PageOptions = .{
-    .caching =  .tag("1h")
-};
-
+pub const options: zx.PageOptions = .{ .caching = .tag("1h") };
 
 const zx = @import("zx");
 const zx_site_mod = @import("zx_site_mod");

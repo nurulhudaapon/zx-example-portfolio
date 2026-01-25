@@ -36,8 +36,23 @@ pub fn Page(ctx: zx.PageContext) !zx.Component {
 }
 
 pub const options: zx.PageOptions = .{
-    .caching =  .tag("7d")
+    .caching = .tag("7d"),
+    .static = .{
+        .getParams = getStaticParams,
+    },
 };
+
+fn getStaticParams(allocator: zx.Allocator) ![]const []const zx.PageOptions.StaticParam {
+    var params = std.ArrayList([]const zx.PageOptions.StaticParam).empty;
+    const posts = try zx_site_mod.getPosts(allocator);
+    for (posts) |post| {
+        const sp = try allocator.alloc(zx.PageOptions.StaticParam, 1);
+        sp[0] = .{ .key = "id", .value = post.slug };
+        try params.append(allocator, sp);
+    }
+    return params.items;
+}
 
 const zx = @import("zx");
 const zx_site_mod = @import("zx_site_mod");
+const std = @import("std");
